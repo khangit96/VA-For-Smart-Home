@@ -1,11 +1,11 @@
-FROM python:3.6.4-alpine3.7
+FROM python:3.6
 
-RUN apk update && apk add build-base && apk add nano
-
-RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
+RUN apt-get update && apt-get install nano && apt-get install mpg321
 
 RUN mkdir Code
 
 RUN pip install pyrebase
 
 RUN pip install apiai
+
+RUN pip install wget
