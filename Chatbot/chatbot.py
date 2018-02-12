@@ -72,4 +72,4 @@ def queryAPIAI(text):
     text= result['fulfillment']['speech']
     
     #print(json.dumps(json_res, indent=4, sort_keys=True))
-    print(text)
+    #print(text)
