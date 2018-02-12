@@ -1,8 +1,4 @@
-FROM python:3.6
-
-RUN apt-get update && apt-get install nano && apt-get install mpg321
-
-RUN mkdir Code
+FROM khangit96/ubuntu:ubuntu16.0.4-python3.6-pulseaudio-mpg321
 
 RUN pip install pyrebase
 
