@@ -1,33 +1,32 @@
-import pyrebase
 import requests
 import json
 import os
 import wget
 import apiai
+from flask import Flask,render_template, redirect, url_for
+from flask import request as requestFlask
+app = Flask(__name__)
 
-#Firebase
-config = {
-  "apiKey": "uTP6tlP930oA1s9zuwGIZvrz1ef8ZjVLegROgNN0",
-  "authDomain": "smarthome-5d11a.firebaseapp.com",
-  "databaseURL": "https://smarthome-5d11a.firebaseio.com",
-  "storageBucket": "smarthome-5d11a.appspot.com"
-}
+#home
+@app.route('/',methods=['GET'])
+def index():
+     return render_template('index.html')
 
-firebase = pyrebase.initialize_app(config)
-db = firebase.database()
-
-#API AI
+# #API AI
 CLIENT_ACCESS_TOKEN = '6fb3bd7a729042bf9a656708f83bebd6'
 
-def stream_handler(message):
-     text=message['data']
+#get resquest
+@app.route('/query',methods=['POST'])
+def query():
+     respone= requestFlask.json
+
      ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 
-     request = ai.text_request()
-     request.lang = 'en'  # optional, default value equal 'en'
-     request.query = text
+     requestApiAI = ai.text_request()
+     requestApiAI.lang = 'en'  # optional, default value equal 'en'
+     requestApiAI.query = respone['text']
 
-     response = request.getresponse()
+     response = requestApiAI.getresponse()
      json_res =json.loads(response.read().decode())
 
      result = json_res['result']
@@ -54,22 +53,11 @@ def stream_handler(message):
      os.system('mv '+filename+' voice.mp3')
      os.system("mpg123 voice.mp3")
      print(text)
+     return 'ok'
 
-my_stream = db.child('chat').stream(stream_handler)
+if __name__ == '__main__':
+   app.run(debug=True,port=3000)
 
-def queryAPIAI(text):
-    ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 
-    request = ai.text_request()
-    request.lang = 'en'  # optional, default value equal 'en'
-    request.query = text
 
-    response = request.getresponse()
-    json_res =json.loads(response.read().decode())
 
-    result = json_res['result']
-    action= result['action']
-    text= result['fulfillment']['speech']
-    
-    #print(json.dumps(json_res, indent=4, sort_keys=True))
-    #print(text)
