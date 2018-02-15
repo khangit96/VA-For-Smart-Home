@@ -14,6 +14,7 @@ def index():
 
 # #API AI
 CLIENT_ACCESS_TOKEN = '6fb3bd7a729042bf9a656708f83bebd6'
+ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 
 #get resquest
 @app.route('/query',methods=['POST'])
@@ -55,9 +56,48 @@ def query():
      print(text)
      return 'ok'
 
-if __name__ == '__main__':
-   app.run(debug=True,port=3000)
+#Test
+thoiTietList=['long an','bình dương','hôm nay','ngày mai']
 
+def queryApiAI(text):
+     requestApiAI = ai.text_request()
+     requestApiAI.lang = 'en'  # optional, default value equal 'en'
+     requestApiAI.query = text
+     #requestApiAI.resetContexts = False
+     requestApiAI.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
 
+     response = requestApiAI.getresponse()
+     json_res =json.loads(response.read().decode())
 
+     result = json_res['result']
+     action= result['action']
+     textRespone= result['fulfillment']['speech']
+     
+     try:
+        context=result['contexts'][0]['name']
+     except:
+        context=''
 
+     try:
+        entities=result['parameters']['ThoiTiet']
+     except:
+        entities=''
+
+    #ThoiTiet
+     if context== 'thoi-tiet':  
+        for s in thoiTietList:
+            if  str(s) in text:
+                print('ok')
+                return
+            #print (''+list.index(s))
+        print('Thời tiết ở đâu ?')
+     else:
+       print(textRespone)
+    
+   
+
+#Start Server
+# if __name__ == '__main__':
+#    app.run(debug=True,port=3000)      
+
+queryApiAI('thời tiết ở tỉnh long an')
