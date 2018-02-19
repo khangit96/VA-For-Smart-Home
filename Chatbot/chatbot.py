@@ -13,7 +13,7 @@ def index():
      return render_template('index.html')
 
 # #API AI
-CLIENT_ACCESS_TOKEN = '6fb3bd7a729042bf9a656708f83bebd6'
+CLIENT_ACCESS_TOKEN = '196e7f53ec2b45fe976a46516dd42a1b'
 ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 
 #get resquest
@@ -72,32 +72,33 @@ def queryApiAI(text):
      result = json_res['result']
      action= result['action']
      textRespone= result['fulfillment']['speech']
+     print(textRespone)
      
-     try:
-        context=result['contexts'][0]['name']
-     except:
-        context=''
+    #  try:
+    #     context=result['contexts'][0]['name']
+    #  except:
+    #     context=''
 
-     try:
-        entities=result['parameters']['ThoiTiet']
-     except:
-        entities=''
+    #  try:
+    #     entities=result['parameters']['ThoiTiet']
+    #  except:
+    #     entities=''
 
-    #ThoiTiet
-     if context== 'thoi-tiet':  
-        for s in thoiTietList:
-            if  str(s) in text:
-                print('ok')
-                return
-            #print (''+list.index(s))
-        print('Thời tiết ở đâu ?')
-     else:
-       print(textRespone)
-    
+    # #ThoiTiet
+    #  if context== 'thoi-tiet':  
+    #     for s in thoiTietList:
+    #         if  str(s) in text:
+    #             print('ok')
+    #             return
+    #         #print (''+list.index(s))
+    #     print('Thời tiết ở đâu ?')
+    #  else:
+    #    print(textRespone)
+   
    
 
 #Start Server
 # if __name__ == '__main__':
 #    app.run(debug=True,port=3000)      
 
-queryApiAI('thời tiết ở tỉnh long an')
+queryApiAI('hello')
