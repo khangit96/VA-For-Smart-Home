@@ -5,6 +5,8 @@ import wget
 import apiai
 from flask import Flask,render_template, redirect, url_for
 from flask import request as requestFlask
+import time
+
 app = Flask(__name__)
 
 #home
@@ -13,7 +15,7 @@ def index():
      return render_template('index.html')
 
 # #API AI
-CLIENT_ACCESS_TOKEN = '196e7f53ec2b45fe976a46516dd42a1b'
+CLIENT_ACCESS_TOKEN = '873c83cbf665414a885eebbf5d5bd448'
 ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 
 #get resquest
@@ -61,9 +63,8 @@ thoiTietList=['long an','bình dương','hôm nay','ngày mai']
 
 def queryApiAI(text):
      requestApiAI = ai.text_request()
-     requestApiAI.lang = 'en'  # optional, default value equal 'en'
+     requestApiAI.lang = 'en'
      requestApiAI.query = text
-     #requestApiAI.resetContexts = False
      requestApiAI.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
 
      response = requestApiAI.getresponse()
@@ -72,9 +73,28 @@ def queryApiAI(text):
      result = json_res['result']
      action= result['action']
      textRespone= result['fulfillment']['speech']
+
+     if action =='start-weather.start-weather-custom':
+        try:
+            entities=result['parameters']['weather']
+        except:
+            entities=''
+
+        print('Ok. Cho em ti, de em tra cuu thong tin thoi tiet '+ entities)
+        time.sleep(3)
+
      print(textRespone)
-     
-    #  try:
+
+#Start Server
+# if __name__ == '__main__':
+#     app.run(debug=True,host='0.0.0.0',port=3000)      
+
+queryApiAI('bật đèn đi')
+
+
+
+
+#  try:
     #     context=result['contexts'][0]['name']
     #  except:
     #     context=''
@@ -95,10 +115,3 @@ def queryApiAI(text):
     #  else:
     #    print(textRespone)
    
-   
-
-#Start Server
-# if __name__ == '__main__':
-#    app.run(debug=True,port=3000)      
-
-queryApiAI('hello')
