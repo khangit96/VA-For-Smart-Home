@@ -89,7 +89,7 @@ def queryApiAI(text):
 # if __name__ == '__main__':
 #     app.run(debug=True,host='0.0.0.0',port=3000)      
 
-queryApiAI('bật đèn đi')
+#queryApiAI('bật đèn đi')
 
 
 
@@ -114,4 +114,8 @@ queryApiAI('bật đèn đi')
     #     print('Thời tiết ở đâu ?')
     #  else:
     #    print(textRespone)
-   
+
+os.system("mpg123 /home/khang/Downloads/demo.mp3")
+time.sleep(3)
+print('ok')
+os.system("pkill mpg123")
