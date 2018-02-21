@@ -74,7 +74,7 @@ def queryApiAI(text):
      action= result['action']
      textRespone= result['fulfillment']['speech']
 
-     if action =='start-weather.start-weather-custom':
+     if action =='start-weather.start-weather-custom' or action== 'start-weather-true':
         try:
             entities=result['parameters']['weather']
         except:
@@ -83,13 +83,22 @@ def queryApiAI(text):
         print('Ok. Cho em ti, de em tra cuu thong tin thoi tiet '+ entities)
         time.sleep(3)
 
+     elif action== 'start-temperature-true':
+         try:
+            entities=result['parameters']['temperature']
+         except:
+            entities=''
+
+         print('Ok. Cho em ti, de em lay thong tin nhiet do '+ entities)
+         time.sleep(3)
+        
+
      print(textRespone)
 
 #Start Server
 # if __name__ == '__main__':
 #     app.run(debug=True,host='0.0.0.0',port=3000)      
-
-#queryApiAI('bật đèn đi')
+queryApiAI('không')
 
 
 
@@ -115,7 +124,7 @@ def queryApiAI(text):
     #  else:
     #    print(textRespone)
 
-os.system("mpg123 /home/khang/Downloads/demo.mp3")
-time.sleep(3)
-print('ok')
-os.system("pkill mpg123")
+# os.system("mpg123 /home/khang/Downloads/demo.mp3")
+# time.sleep(3)
+# print('ok')
+# os.system("pkill mpg123")
