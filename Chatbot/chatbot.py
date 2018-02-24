@@ -13,7 +13,7 @@ def index():
      return render_template('index.html')
 
 # #API AI
-CLIENT_ACCESS_TOKEN = '196e7f53ec2b45fe976a46516dd42a1b'
+CLIENT_ACCESS_TOKEN = '873c83cbf665414a885eebbf5d5bd448'
 ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 
 #get resquest
@@ -98,7 +98,7 @@ def queryApiAI(text):
    
 
 #Start Server
-# if __name__ == '__main__':
-#    app.run(debug=True,port=3000)      
+if __name__ == '__main__':
+    app.run(debug=True,host='0.0.0.0',port=3000)
 
-queryApiAI('hello')
+#queryApiAI('sddsfj khang nguyen h')
