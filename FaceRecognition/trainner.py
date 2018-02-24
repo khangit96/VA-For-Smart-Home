@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-detector= cv2.CascadeClassifier("../haarcascade_frontalface_default.xml");
+detector= cv2.CascadeClassifier("haarcascade_frontface.xml");
 
 def getImagesAndLabels(path):
     #get the path of all the files in the folder
@@ -18,7 +18,6 @@ def getImagesAndLabels(path):
         pilImage=Image.open(imagePath).convert('L')
         #Now we are converting the PIL image into numpy array
         imageNp=np.array(pilImage,'uint8')
-        #getting the Id from the image
         Id=int(os.path.split(imagePath)[-1].split(".")[1])
         # extract the face from the training image sample
         faces=detector.detectMultiScale(imageNp)
