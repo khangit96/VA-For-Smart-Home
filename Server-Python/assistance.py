@@ -63,7 +63,6 @@ def query():
           except:
             numberLight=-3
             statusLight= ''
-
           if statusLight== 'bật':
              queryGPIO('turn-on-light',numberLight)
           elif statusLight== 'tắt':
