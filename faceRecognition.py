@@ -4,6 +4,7 @@ import dlib
 import config as con
 import requests
 import json
+import threading, time
 
 faceCascade = cv2.CascadeClassifier('./Model/haarcascade_frontface.xml')
 
@@ -22,6 +23,10 @@ def issueVoice(voice):
     r = requests.post(url = API_ENDPOINT,data=json.dumps(data),headers=headers)
     json_str = json.dumps(r.json())
     print(json_str)
+
+#thread recognition face
+def faceRecognition(arg, arg2):
+    issueVoice('Phát hiện người kìa')
 
 #detect and tracking face
 def detectAndTrackLargestFace():
@@ -103,6 +108,10 @@ def detectAndTrackLargestFace():
                         w = int(_w)
                         h = int(_h)
                         maxArea = w*h
+
+                        thread = threading.Thread(target=faceRecognition, args=("I'ma", "thread"))
+                        thread.start()
+
                         print('detected face')
 
                 #If one or more faces are found, initialize the tracker
@@ -111,8 +120,6 @@ def detectAndTrackLargestFace():
 
                     #Initialize the tracker
                     tracker.start_track(baseImage, dlib.rectangle( x-10,y-20,x+w+10,y+h+20))
-
-                    issueVoice('phát hiện mặt người')
 
                     #Set the indicator variable such that we know the
                     #tracker is tracking a region in the image
