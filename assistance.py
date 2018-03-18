@@ -42,7 +42,7 @@ def query():
             entities=''
 
        # print('Ok. Cho em ti, de em tra cuu thong tin thoi tiet '+ entities)
-        issueVoice('Ok chờ em tí, để em tra cứu thông tin thời tiết '+ entities)
+        issueVoice('Ok chờ mình tí, để mình tra cứu thông tin thời tiết '+ entities)
         time.sleep(3)
 
     #temperature
@@ -51,8 +51,8 @@ def query():
             entities=result['parameters']['temperature']
          except:
             entities=''
+         issueVoice('Ok. Chờ mình tí, để mình lấy thông tin nhiệt độ '+ entities)
 
-         issueVoice('Ok. Chờ em tí, để em lấy thông tin nhiệt độ '+ entities)
          time.sleep(3)
 
     #control light
@@ -79,7 +79,8 @@ def query():
               issueVoice('Em đã tắt đèn '+context['number-light']+' rồi đó')
 
      issueVoice(textRespone)
-     return 'query success'
+     json_response= json.dumps({'result-assistance':True})
+     return json_response
 
 #issueVoice
 def issueVoice(voice):

@@ -28,9 +28,32 @@ def issueVoice(arg, arg2):
     json_str = json.dumps(r.json())
     print(json_str)
 
-# thread recognition face
-def faceRecognition(arg, arg2):
-    issueVoice('Phát hiện người kìa')
+#query assistance    
+def queryAssistance(arg, arg2):
+    data = {
+        'text': arg
+    }
+    API_ENDPOINT = 'http://localhost:'+str(con.ASSISTANCE_PORT)+'/query'
+    headers = {
+        'content-type': 'application/json; charset=utf-8'
+    }
+    r = requests.post(url=API_ENDPOINT, data=json.dumps(data), headers=headers)
+    
+    if r is None:
+        print('error respones')
+    else:    
+        json_str = json.dumps(r.json())
+        print(json_str)
+
+#start thread query assistance   
+def startThreadQueryAssistance(value):
+    thread = threading.Thread(target=queryAssistance, args=(value,'fkf'))
+    thread.start()
+
+#start thread issuse voice
+def startThreadIssuseVoice(value):
+    thread = threading.Thread(target=issueVoice, args=(value,'fkf'))
+    thread.start()
 
 # predict face
 def predictFace(gray,faces):
@@ -55,8 +78,8 @@ def predictFace(gray,faces):
         else:
             Id = "người lạ"
 
-        thread = threading.Thread(target=issueVoice, args=("xin chào "+Id,"dkdk"))
-        thread.start()
+        #start thread query assistance
+        startThreadQueryAssistance('hi')
 
         print(Id+'-'+str(con))
 
@@ -181,6 +204,8 @@ def detectAndTrackLargestFace():
                     # again
                     trackingFace = 0
                     print('stop tracking')
+                    startThreadIssuseVoice('mình không thấy mặt bạn, vui lòng quay lại đi')
+                    
 
             # Since we want to show something larger on the screen than the
             # original 320x240, we resize the image again
