@@ -8,16 +8,19 @@ import config as con
 
 app = Flask(__name__)
 
-#home
-@app.route('/',methods=['GET'])
+# home
+
+
+@app.route('/', methods=['GET'])
 def index():
-     return 'Index'
+     json_response = json.dumps({'result-assistance': True})
+     return json_response
 
 # #API AI
 CLIENT_ACCESS_TOKEN = '873c83cbf665414a885eebbf5d5bd448'
 ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 
-#get resquest
+# get resquest
 @app.route('/query',methods=['POST'])
 def query():
      respone= requestFlask.json
@@ -34,7 +37,7 @@ def query():
      action= result['action']
      textRespone= result['fulfillment']['speech']
 
-      #weather
+      # weather
      if action =='start-weather.start-weather-custom' or action== 'start-weather-true':
         try:
             entities=result['parameters']['weather']
@@ -45,7 +48,7 @@ def query():
         issueVoice('Ok chờ mình tí, để mình tra cứu thông tin thời tiết '+ entities)
         time.sleep(3)
 
-    #temperature
+    # temperature
      elif action== 'start-temperature-true':
          try:
             entities=result['parameters']['temperature']
@@ -55,7 +58,7 @@ def query():
 
          time.sleep(3)
 
-    #control light
+    # control light
      elif action=='control-light-true':
           try:
             numberLight=result['parameters']['number-light']
@@ -73,16 +76,16 @@ def query():
 
           if context['status-light']== 'bật':
               queryGPIO('turn-on-light',context['number-light'])
-              issueVoice('Em đã bật đèn '+context['number-light']+' rồi đó')
+              issueVoice('mình đã bật đèn '+context['number-light']+' rồi đó')
           elif context['status-light']== 'tắt':
               queryGPIO('turn-off-light',context['number-light'])
-              issueVoice('Em đã tắt đèn '+context['number-light']+' rồi đó')
+              issueVoice('mình đã tắt đèn '+context['number-light']+' rồi đó')
 
      issueVoice(textRespone)
      json_response= json.dumps({'result-assistance':True})
      return json_response
 
-#issueVoice
+# issueVoice
 def issueVoice(voice):
     data={
          'voice':voice
@@ -93,10 +96,10 @@ def issueVoice(voice):
      }
     r = requests.post(url = API_ENDPOINT,data=json.dumps(data),headers=headers)
     json_str = json.dumps(r.json())
-    print(json_str)
-  #  return json_str
+    #print(json_str)
+    return json_str
 
-#query GPIO
+# query GPIO
 def queryGPIO(url,light):
     data={
          'light':light
@@ -107,9 +110,9 @@ def queryGPIO(url,light):
      }
     r = requests.post(url = API_ENDPOINT,data=json.dumps(data),headers=headers)
     json_str = json.dumps(r.json())
-    print(json_str)
+    return json_str
 
-#Start Server
+# Start Server
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0',port=con.ASSISTANCE_PORT)
 
