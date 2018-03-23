@@ -20,7 +20,7 @@ def issueVoice(arg, arg2):
     data = {
         'voice': arg
     }
-    API_ENDPOINT = 'http://localhost:'+str(con.GPIO_PORT)+'/issue-voice'
+    API_ENDPOINT = 'http://'+con.GPIO_IP+':'+str(con.GPIO_PORT)+'/issue-voice'
     headers = {
         'content-type': 'application/json; charset=utf-8'
     }

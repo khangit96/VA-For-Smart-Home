@@ -54,7 +54,7 @@ def query():
             entities=result['parameters']['temperature']
          except:
             entities=''
-         issueVoice('Ok. Chờ mình tí, để mình lấy thông tin nhiệt độ '+ entities)
+         issueVoice('Chờ mình tí, để mình lấy thông tin nhiệt độ '+ entities)
 
          time.sleep(3)
 
@@ -90,7 +90,7 @@ def issueVoice(voice):
     data={
          'voice':voice
      }
-    API_ENDPOINT = 'http://localhost:'+str(con.GPIO_PORT)+'/issue-voice'
+    API_ENDPOINT = 'http://'+con.GPIO_IP+':'+str(con.GPIO_PORT)+'/issue-voice'
     headers={
       'content-type': 'application/json; charset=utf-8'
      }
@@ -104,7 +104,7 @@ def queryGPIO(url,light):
     data={
          'light':light
      }
-    API_ENDPOINT = 'http://localhost:'+str(con.GPIO_PORT)+'/'+url
+    API_ENDPOINT = 'http://'+con.GPIO_IP+':'+str(con.GPIO_PORT)+'/'+url
     headers={
       'content-type': 'application/json; charset=utf-8'
      }
