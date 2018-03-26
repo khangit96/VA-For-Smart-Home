@@ -283,156 +283,42 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
-
-    public void queryFromAPIAI(String query) {
-        /*api ai*/
-        final AIConfiguration config = new AIConfiguration("873c83cbf665414a885eebbf5d5bd448",
-                AIConfiguration.SupportedLanguages.English,
-                AIConfiguration.RecognitionEngine.System);
-
-        final AIDataService aiDataService = new AIDataService(config);
-
-        final AIRequest aiRequest = new AIRequest();
-        aiRequest.setQuery(query);
-
-        new AsyncTask<AIRequest, Void, AIResponse>() {
-            @Override
-            protected AIResponse doInBackground(AIRequest... requests) {
-                final AIRequest request = requests[0];
-                try {
-                    final AIResponse response = aiDataService.request(aiRequest);
-                    return response;
-                } catch (AIServiceException e) {
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(AIResponse aiResponse) {
-                if (aiResponse != null) {
-                    final Result result = aiResponse.getResult();
-                    String action = result.getAction().toString();
-                    Toast.makeText(getApplicationContext(), action, Toast.LENGTH_LONG).show();
-
-//                    if (action.equals("BatDen1")) {
-//                        switchRelay1.setChecked(true);
-//                        mDatabase.child("MinhTrung/Relay1/TurnOn").setValue(true);
-//                    } else if (action.equals("TatDen1")) {
-//                        checkTurnOffBlink(cbRelay1, switchRelay1, "MinhTrung/Relay1/TurnOn");
-//                    } else if (action.equals("BatDen2")) {
-//                        switchRelay2.setChecked(true);
-//                        mDatabase.child("MinhTrung/Relay2/TurnOn").setValue(true);
-//                    } else if (action.equals("TatDen2")) {
-//                        checkTurnOffBlink(cbRelay2, switchRelay2, "MinhTrung/Relay2/TurnOn");
-//
-//                    } else if (action.equals("BatDen3")) {
-//                        switchRelay3.setChecked(true);
-//                        mDatabase.child("MinhTrung/Relay3/TurnOn").setValue(true);
-//                    } else if (action.equals("TatDen3")) {
-//                        checkTurnOffBlink(cbRelay3, switchRelay3, "MinhTrung/Relay3/TurnOn");
-//
-//                    } else if (action.equals("BatDen4")) {
-//                        switchRelay4.setChecked(true);
-//                        mDatabase.child("MinhTrung/Relay4/TurnOn").setValue(true);
-//                    } else if (action.equals("TatDen4")) {
-//                        checkTurnOffBlink(cbRelay4, switchRelay4, "MinhTrung/Relay4/TurnOn");
-//
-//                    } else if (action.equals("BatDen5")) {
-//                        switchRelay5.setChecked(true);
-//                        mDatabase.child("MinhTrung/Relay5/TurnOn").setValue(true);
-//                    } else if (action.equals("TatDen5")) {
-//                        checkTurnOffBlink(cbRelay5, switchRelay5, "MinhTrung/Relay5/TurnOn");
-//
-//                    } else if (action.equals("BatDen6")) {
-//                        switchRelay6.setChecked(true);
-//                        mDatabase.child("MinhTrung/Relay6/TurnOn").setValue(true);
-//                    }
-//                    //Blink
-//                    else if (action.equals("BatNhapNhayDen1")) {
-//                        Toast.makeText(getApplicationContext(), "Bat nhap nhay den 1", Toast.LENGTH_LONG).show();
-//                    } else if (action.equals("TatNhapNhayDen1")) {
-//                        Toast.makeText(getApplicationContext(), "Tat nhap nhay den 1", Toast.LENGTH_LONG).show();
-//                    } else if (action.equals("BatNhapNhayDen2")) {
-//                        Toast.makeText(getApplicationContext(), "Bat nhap nhay den 2", Toast.LENGTH_LONG).show();
-//                    } else if (action.equals("TatNhapNhayDen2")) {
-//                        Toast.makeText(getApplicationContext(), "Tat nhap nhay den 2", Toast.LENGTH_LONG).show();
-//                    } else if (action.equals("BatNhapNhayDen3")) {
-//                        Toast.makeText(getApplicationContext(), "Bat nhap nhay den 3", Toast.LENGTH_LONG).show();
-//                    } else if (action.equals("TatNhapNhayDen3")) {
-//                        Toast.makeText(getApplicationContext(), "Tat nhap nhay den 3", Toast.LENGTH_LONG).show();
-//                    } else {
-//                        new MaterialDialog.Builder(MainActivity.this)
-//                                .title("Thông báo")
-//                                .content("Hệ thống không nhận dạng được giọng nói, vui lòng nói lại!")
-//                                .negativeText("Đóng")
-//                                .canceledOnTouchOutside(false)
-//                                .show();
-//                    }
-                }
-            }
-        }.execute(aiRequest);
-    }
-
-    /*
-    * */
-    public void checkTurnOffBlink(CheckBox cb, SwitchCompat switchRelay, String child) {
-        if (!cb.isChecked()) {
-            switchRelay.setChecked(false);
-            mDatabase.child(child).setValue(false);
-            return;
-        }
-        showDialog();
-    }
-
-    public void showDialog() {
-        new MaterialDialog.Builder(this)
-                .title("Thông báo")
-                .content("Vui lòng tắt nhấp nháy trước!")
-                .negativeText("Đóng")
-                .canceledOnTouchOutside(false)
-                .show();
-    }
-
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         if (requestCode == 10) {
             if (resultCode == RESULT_OK && data != null) {
-                count++;
                 ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 final String textRespone = result.get(0).toString();
-                Toast.makeText(getApplicationContext(),textRespone, Toast.LENGTH_LONG).show();
-               // queryFromAPIAI(textRespone);
-//                Toast.makeText(getApplicationContext(), textRespone + " " + count, Toast.LENGTH_LONG).show();
-//                String url = "http://192.168.1.12:3000/query";
-//
-//                JSONObject postparams = new JSONObject();
-//                try {
-//                    postparams.put("text", textRespone);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                JsonObjectRequest request = new JsonObjectRequest(
-//                        Request.Method.POST, url, postparams,
-//                        new Response.Listener<JSONObject>() {
-//                            @Override
-//                            public void onResponse(JSONObject response) {
-//                                Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
-//                            }
-//                        },
-//                        new Response.ErrorListener() {
-//                            @Override
-//                            public void onErrorResponse(VolleyError error) {
-//                                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
-//                            }
-//                        }) {
-//                };
-//
-//                request.setRetryPolicy(new DefaultRetryPolicy(
-//                        0,
-//                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-//                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//                queue.add(request);
+                String url = "http://192.168.1.12:3000/query";
+
+                JSONObject postparams = new JSONObject();
+                try {
+                    postparams.put("text", textRespone);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, url, postparams,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        }) {
+                };
+
+                request.setRetryPolicy(new DefaultRetryPolicy(
+                        0,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                queue.add(request);
             }
         }
     }
