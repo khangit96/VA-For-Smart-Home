@@ -17,7 +17,7 @@ OUTPUT_SIZE_HEIGHT = 600
 
 # detect and tracking face
 def detectAndTrackLargestFace():
-    capture = cv2.VideoCapture(0)
+    capture = cv2.VideoCapture('101.h264')
 
     cv2.namedWindow("base-image", cv2.WINDOW_AUTOSIZE)
     cv2.namedWindow("result-image", cv2.WINDOW_AUTOSIZE)
