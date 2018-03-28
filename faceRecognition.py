@@ -15,75 +15,6 @@ recognizer.read('./Model/trainner.yml')
 OUTPUT_SIZE_WIDTH = 775
 OUTPUT_SIZE_HEIGHT = 600
 
-# issueVoice
-def issueVoice(arg, arg2):
-    data = {
-        'voice': arg
-    }
-    API_ENDPOINT = 'http://'+con.GPIO_IP+':'+str(con.GPIO_PORT)+'/issue-voice'
-    headers = {
-        'content-type': 'application/json; charset=utf-8'
-    }
-    r = requests.post(url=API_ENDPOINT, data=json.dumps(data), headers=headers)
-    json_str = json.dumps(r.json())
-    print(json_str)
-
-#query assistance    
-def queryAssistance(arg, arg2):
-    data = {
-        'text': arg
-    }
-    API_ENDPOINT = 'http://localhost:'+str(con.ASSISTANCE_PORT)+'/query'
-    headers = {
-        'content-type': 'application/json; charset=utf-8'
-    }
-    r = requests.post(url=API_ENDPOINT, data=json.dumps(data), headers=headers)
-    
-    if r is None:
-        print('error respones')
-    else:    
-        json_str = json.dumps(r.json())
-        print(json_str)
-
-#start thread query assistance   
-def startThreadQueryAssistance(value):
-    thread = threading.Thread(target=queryAssistance, args=(value,'fkf'))
-    thread.start()
-
-#start thread issuse voice
-def startThreadIssuseVoice(value):
-    thread = threading.Thread(target=issueVoice, args=(value,'fkf'))
-    thread.start()
-
-# predict face
-def predictFace(gray,faces):
-   for (x, y, w, h) in faces:
-        Id, con = recognizer.predict(gray[y:y+h, x:x+w])
-
-        if con < 100:
-            if Id == 1:
-                Id = "Ruby"
-            elif Id == 2:
-                Id = "Keen"
-            elif Id == 3:
-                Id = 'Truong Giang'
-            elif Id == 4:
-                Id = 'Me'
-            elif Id == 5:
-                Id = 'Ba'
-            elif Id == 6:
-                Id = 'Loi'
-            elif Id == 7:
-                Id = 'Tuan'
-        else:
-            Id = "người lạ"
-
-        #start thread query assistance
-        startThreadQueryAssistance('hi')
-
-        print(Id+'-'+str(con))
-
-
 # detect and tracking face
 def detectAndTrackLargestFace():
     capture = cv2.VideoCapture(0)
@@ -162,8 +93,6 @@ def detectAndTrackLargestFace():
                         h = int(_h)
                         maxArea = w*h
 
-                        #predictFace(gray,faces)
-
                 # If one or more faces are found, initialize the tracker
                 # on the largest face in the picture
                 if maxArea > 0:
@@ -204,7 +133,6 @@ def detectAndTrackLargestFace():
                     # again
                     trackingFace = 0
                     print('stop tracking')
-                    #startThreadIssuseVoice('mình không thấy mặt bạn, vui lòng quay lại đi')
                     
 
             # Since we want to show something larger on the screen than the
