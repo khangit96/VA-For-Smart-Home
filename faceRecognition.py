@@ -162,7 +162,7 @@ def detectAndTrackLargestFace():
                         h = int(_h)
                         maxArea = w*h
 
-                        predictFace(gray,faces)
+                        #predictFace(gray,faces)
 
                 # If one or more faces are found, initialize the tracker
                 # on the largest face in the picture
@@ -204,7 +204,7 @@ def detectAndTrackLargestFace():
                     # again
                     trackingFace = 0
                     print('stop tracking')
-                    startThreadIssuseVoice('mình không thấy mặt bạn, vui lòng quay lại đi')
+                    #startThreadIssuseVoice('mình không thấy mặt bạn, vui lòng quay lại đi')
                     
 
             # Since we want to show something larger on the screen than the
