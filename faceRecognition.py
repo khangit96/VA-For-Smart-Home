@@ -190,7 +190,7 @@ def detectAndTrackLargestFace():
                         h = int(_h)
                         maxArea = w*h
 
-                        predictFace(gray, faces)
+                        #predictFace(gray, faces)
 
                 # If one or more faces are found, initialize the tracker
                 # on the largest face in the picture
