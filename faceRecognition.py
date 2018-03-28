@@ -6,6 +6,9 @@ import requests
 import json
 import threading
 import time
+import urllib.request
+import numpy as np
+
 
 faceCascade = cv2.CascadeClassifier('./Model/haarcascade_frontface.xml')
 
@@ -16,6 +19,8 @@ OUTPUT_SIZE_WIDTH = 775
 OUTPUT_SIZE_HEIGHT = 600
 
 # issueVoice
+
+
 def issueVoice(arg, arg2):
     data = {
         'voice': arg
@@ -28,7 +33,9 @@ def issueVoice(arg, arg2):
     json_str = json.dumps(r.json())
     print(json_str)
 
-#query assistance    
+# query assistance
+
+
 def queryAssistance(arg, arg2):
     data = {
         'text': arg
@@ -38,26 +45,32 @@ def queryAssistance(arg, arg2):
         'content-type': 'application/json; charset=utf-8'
     }
     r = requests.post(url=API_ENDPOINT, data=json.dumps(data), headers=headers)
-    
+
     if r is None:
         print('error respones')
-    else:    
+    else:
         json_str = json.dumps(r.json())
         print(json_str)
 
-#start thread query assistance   
+# start thread query assistance
+
+
 def startThreadQueryAssistance(value):
-    thread = threading.Thread(target=queryAssistance, args=(value,'fkf'))
+    thread = threading.Thread(target=queryAssistance, args=(value, 'fkf'))
     thread.start()
 
-#start thread issuse voice
+# start thread issuse voice
+
+
 def startThreadIssuseVoice(value):
-    thread = threading.Thread(target=issueVoice, args=(value,'fkf'))
+    thread = threading.Thread(target=issueVoice, args=(value, 'fkf'))
     thread.start()
 
 # predict face
-def predictFace(gray,faces):
-   for (x, y, w, h) in faces:
+
+
+def predictFace(gray, faces):
+    for (x, y, w, h) in faces:
         Id, con = recognizer.predict(gray[y:y+h, x:x+w])
 
         if con < 100:
@@ -78,7 +91,7 @@ def predictFace(gray,faces):
         else:
             Id = "người lạ"
 
-        #start thread query assistance
+        # start thread query assistance
         startThreadQueryAssistance('hi')
 
         print(Id+'-'+str(con))
@@ -86,7 +99,7 @@ def predictFace(gray,faces):
 
 # detect and tracking face
 def detectAndTrackLargestFace():
-    capture = cv2.VideoCapture(0)
+   # capture = cv2.VideoCapture(0)
 
     cv2.namedWindow("base-image", cv2.WINDOW_AUTOSIZE)
     cv2.namedWindow("result-image", cv2.WINDOW_AUTOSIZE)
@@ -106,11 +119,26 @@ def detectAndTrackLargestFace():
 
     # The color of the rectangle we draw around the face
     rectangleColor = (0, 165, 255)
+    stream = urllib.request.urlopen(
+        'http://192.168.43.164:8080/?action=stream')
+    bytes = bytes()
+    rc, fullSizeBaseImage= None
 
     try:
         while True:
             # Retrieve the latest image from the webcam
-            rc, fullSizeBaseImage = capture.read()
+            #Recive image from stream
+            global bytes
+            bytes += stream.read(1024)
+            a = bytes.find(b'\xff\xd8')
+            b = bytes.find(b'\xff\xd9')
+
+            if a != -1 and b != -1:
+                jpg = bytes[a:b+2]
+                bytes = bytes[b+2:]
+                img = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                global rc, fullSizeBaseImage
+                rc, fullSizeBaseImage = img
 
             # Resize the image to 320x240
             baseImage = cv2.resize(fullSizeBaseImage, (320, 240))
@@ -162,7 +190,7 @@ def detectAndTrackLargestFace():
                         h = int(_h)
                         maxArea = w*h
 
-                        predictFace(gray,faces)
+                        predictFace(gray, faces)
 
                 # If one or more faces are found, initialize the tracker
                 # on the largest face in the picture
@@ -204,8 +232,8 @@ def detectAndTrackLargestFace():
                     # again
                     trackingFace = 0
                     print('stop tracking')
-                    startThreadIssuseVoice('mình không thấy mặt bạn, vui lòng quay lại đi')
-                    
+                    startThreadIssuseVoice(
+                        'mình không thấy mặt bạn, vui lòng quay lại đi')
 
             # Since we want to show something larger on the screen than the
             # original 320x240, we resize the image again
@@ -228,5 +256,3 @@ def detectAndTrackLargestFace():
 
 if __name__ == '__main__':
     detectAndTrackLargestFace()
-
-le anh tuan

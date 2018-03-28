@@ -24,7 +24,7 @@ while True:
         
         #showimg
         cv2.imshow('i', i)
-        cv2.imwrite('captured'+str(count)+'.jpg',i)
+        #cv2.imwrite('captured'+str(count)+'.jpg',i)
         #Exit loop
-        cv2.waitKey(2000)
+        cv2.waitKey(5)
         
