@@ -228,3 +228,5 @@ def detectAndTrackLargestFace():
 
 if __name__ == '__main__':
     detectAndTrackLargestFace()
+
+Nguyen Khang
