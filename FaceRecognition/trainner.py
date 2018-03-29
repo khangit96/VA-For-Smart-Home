@@ -28,6 +28,6 @@ def getImagesAndLabels(path):
     return faceSamples,Ids
 
 
-faces,Ids = getImagesAndLabels('Dataset')
+faces,Ids = getImagesAndLabels('DataSet')
 recognizer.train(faces, np.array(Ids))
 recognizer.write('trainner.yml')

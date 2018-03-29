@@ -218,7 +218,7 @@ def detectAndTrackLargestFace():
                 resultImage, (OUTPUT_SIZE_WIDTH, OUTPUT_SIZE_HEIGHT))
 
             # Finally, we want to show the images on the screen
-            cv2.imshow("base-image", baseImage)
+          w
             cv2.imshow("result-image", largeResult)
 
     except KeyboardInterrupt as e:
