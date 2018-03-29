@@ -62,9 +62,9 @@ def predictFace(gray,faces):
 
         if con < 100:
             if Id == 1:
-                Id = "Ruby"
+                Id = "Khang"
             elif Id == 2:
-                Id = "Keen"
+                Id = "Khoi"
             elif Id == 3:
                 Id = 'Truong Giang'
             elif Id == 4:
@@ -79,10 +79,11 @@ def predictFace(gray,faces):
             Id = "người lạ"
 
         #start thread query assistance
-        startThreadQueryAssistance('hi')
+       # startThreadQueryAssistance('hi')
+        if countPredict==5:
+          print(Id+'-'+str(con))
 
-        print(Id+'-'+str(con))
-
+countPredict=0
 
 # detect and tracking face
 def detectAndTrackLargestFace():
@@ -162,19 +163,24 @@ def detectAndTrackLargestFace():
                         h = int(_h)
                         maxArea = w*h
 
-                        #predictFace(gray,faces)
+                        predictFace(gray,faces)
 
                 # If one or more faces are found, initialize the tracker
                 # on the largest face in the picture
-                if maxArea > 0:
+                if countPredict==5:
+                    global countPredict
+                    countPredict=0
+                    if maxArea > 0:
 
-                    # Initialize the tracker
-                    tracker.start_track(baseImage, dlib.rectangle(
-                        x-10, y-20, x+w+10, y+h+20))
+                        # Initialize the tracker
+                        tracker.start_track(baseImage, dlib.rectangle(
+                            x-10, y-20, x+w+10, y+h+20))
 
-                    # Set the indicator variable such that we know the
-                    # tracker is tracking a region in the image
-                    trackingFace = 1
+                        # Set the indicator variable such that we know the
+                        # tracker is tracking a region in the image
+                        trackingFace = 1
+                else:
+                    countPredict+=1
 
             # Check if the tracker is actively tracking a region in the image
             if trackingFace:
@@ -218,7 +224,7 @@ def detectAndTrackLargestFace():
                 resultImage, (OUTPUT_SIZE_WIDTH, OUTPUT_SIZE_HEIGHT))
 
             # Finally, we want to show the images on the screen
-          w
+          
             cv2.imshow("result-image", largeResult)
 
     except KeyboardInterrupt as e:
