@@ -6,8 +6,22 @@ import config as con
 import time
 import os
 import wget
+import RPi.GPIO as GPIO
+import time
 
 app = Flask(__name__)
+
+
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setwarnings(False)
+
+#Relay1
+GPIO.setup(20,GPIO.OUT)
+
+#Relay2
+GPIO.setup(21,GPIO.OUT)
+
 
 #home
 @app.route('/',methods=['GET'])
@@ -19,7 +33,12 @@ def index():
 def turnOnLight():
      respone= requestFlask.json
      light=respone['light']
-     print('turn on light '+str(light))
+     if light=="1":
+         GPIO.output(20,GPIO.LOW)
+     else:
+         GPIO.output(21,GPIO.LOW)
+         
+     print('turn on light '+light)
      json_response= json.dumps({'result-turn-on-light':True})
      return json_response
 
@@ -28,7 +47,11 @@ def turnOnLight():
 def turnOffLight():
      respone= requestFlask.json
      light=respone['light']
-     print('turn off light '+str(light))
+     if light=="2":
+         GPIO.output(20,GPIO.LOW)
+     else:
+         GPIO.output(21,GPIO.LOW)
+     print('turn off light '+light)
      json_response= json.dumps({'result-turn-off-light':True})
      return json_response
 
