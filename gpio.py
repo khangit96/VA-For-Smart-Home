@@ -5,7 +5,7 @@ from flask import request as requestFlask
 import config as con
 import time
 import os
-import wget
+import urllib.request
 
 app = Flask(__name__)
 
@@ -52,9 +52,7 @@ def issueVoice():
 
      url =r.json()['async']
      print(url)
-     filename = wget.download(url)
-     fileMp3='mpg321 '+filename
-     os.system('mv '+filename+' voice.mp3')
+     urllib.request.urlretrieve(url,'voice.mp3')
      os.system("mpg123 voice.mp3")
 
      json_response= json.dumps({'result-voice':True})
