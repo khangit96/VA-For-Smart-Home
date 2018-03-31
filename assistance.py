@@ -82,6 +82,7 @@ def query():
               issueVoice('mình đã tắt đèn '+context['number-light']+' rồi đó')
 
      issueVoice(textRespone)
+     print(textRespone)
      json_response= json.dumps({'result-assistance':True})
      return json_response
 
