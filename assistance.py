@@ -96,9 +96,9 @@ def issueVoice(voice):
       'content-type': 'application/json; charset=utf-8'
      }
     r = requests.post(url = API_ENDPOINT,data=json.dumps(data),headers=headers)
-    json_str = json.dumps(r.json())
-    #print(json_str)
-    return json_str
+    # json_str = json.dumps(r.json())
+    # return json_str
+    print('issue voice')
 
 # query GPIO
 def queryGPIO(url,light):

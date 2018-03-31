@@ -50,10 +50,10 @@ def issueVoice():
      data = voice.encode(encoding='utf-8')
      r = requests.post(url = API_ENDPOINT,data=data,headers=headers)
 
-     url =r.json()['async']
-     print(url)
-     urllib.request.urlretrieve(url,'voice.mp3')
-     os.system("mpg123 voice.mp3")
+    #  url =r.json()['async']
+    #  print(url)
+    #  urllib.request.urlretrieve(url,'voice.mp3')
+    #  os.system("mpg123 voice.mp3")
 
      json_response= json.dumps({'result-voice':True})
      return json_response
@@ -68,22 +68,22 @@ def getTemperature():
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0',port=con.GPIO_PORT)      
 
-def issueVoice(text):     
-     API_ENDPOINT = "http://api.openfpt.vn/text2speech/v4"
+# def issueVoice(text):     
+#      API_ENDPOINT = "http://api.openfpt.vn/text2speech/v4"
 
-     headers={
-            'api_key':'44c319aae94d40229d7cc09f1ce759f1',
-            'speed':'0',
-            'voice': 'hatieumai',
-            'prosody':'1',
-            'Cache-Control':'no-cache'
-        }
-     data = text.encode(encoding='utf-8')
-     r = requests.post(url = API_ENDPOINT,data=data,headers=headers)
-
-     url =r.json()['async']
-     print(url)
-     filename = wget.download(url)
-     fileMp3='mpg321 '+filename
-     os.system('mv '+filename+' voice.mp3')
-     os.system("mpg123 voice.mp3")
+#      headers={
+#             'api_key':'44c319aae94d40229d7cc09f1ce759f1',
+#             'speed':'0',
+#             'voice': 'hatieumai',
+#             'prosody':'1',
+#             'Cache-Control':'no-cache'
+#         }
+#      data = text.encode(encoding='utf-8')
+#      r = requests.post(url = API_ENDPOINT,data=data,headers=headers)
+#      print
+#     #  url =r.json()['async']
+#     #  print(url)
+#     #  filename = wget.download(url)
+#     #  fileMp3='mpg321 '+filename
+#     #  os.system('mv '+filename+' voice.mp3')
+#     #  os.system("mpg123 voice.mp3")
