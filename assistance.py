@@ -44,45 +44,51 @@ def query():
         except:
             entities=''
 
-       # print('Ok. Cho em ti, de em tra cuu thong tin thoi tiet '+ entities)
         issueVoice('Ok chờ mình tí, để mình tra cứu thông tin thời tiết '+ entities)
-        time.sleep(3)
 
     # temperature
      elif action== 'start-temperature-true':
          try:
             entities=result['parameters']['temperature']
+            if entities!='':
+                issueVoice('Chờ mình tí, để mình lấy thông tin nhiệt độ '+ entities)
          except:
             entities=''
-         issueVoice('Chờ mình tí, để mình lấy thông tin nhiệt độ '+ entities)
-
-         time.sleep(3)
+            
+     elif action== 'start-temperature-true.start-temperature-true-custom':
+          issueVoice('Chờ mình tí, để mình lấy thông tin nhiệt độ hiện tại trong phòng')
 
     # control light
      elif action=='control-light-true':
           try:
             numberLight=result['parameters']['number-light']
             statusLight=result['parameters']['status-light']
+            if statusLight== 'bật':
+                 queryGPIO('turn-on-light',numberLight)
+                 issueVoice('mình đã bật đèn '+numberLight+' rồi đó')
+            elif statusLight== 'tắt':
+                queryGPIO('turn-off-light',numberLight)
+                issueVoice('mình đã tắt đèn '+numberLight+' rồi đó')
           except:
             numberLight=-3
             statusLight= ''
-          if statusLight== 'bật':
-             queryGPIO('turn-on-light',numberLight)
-          elif statusLight== 'tắt':
-             queryGPIO('turn-off-light',numberLight)
+         
+
    
      elif action=='control-light-false.control-light-false-custom':
           context=result['contexts'][0]['parameters']
 
-          if context['status-light']== 'bật':
-              queryGPIO('turn-on-light',context['number-light'])
-              issueVoice('mình đã bật đèn '+context['number-light']+' rồi đó')
-          elif context['status-light']== 'tắt':
-              queryGPIO('turn-off-light',context['number-light'])
-              issueVoice('mình đã tắt đèn '+context['number-light']+' rồi đó')
+          try:
+              if context['status-light']== 'bật':
+                  queryGPIO('turn-on-light',context['number-light'])
+                  issueVoice('mình đã bật đèn '+context['number-light']+' rồi đó')
+              elif context['status-light']== 'tắt':
+                  queryGPIO('turn-off-light',context['number-light'])
+                  issueVoice('mình đã tắt đèn '+context['number-light']+' rồi đó')
+          except:
+              context= ''
 
      issueVoice(textRespone)
-     print(textRespone)
      json_response= json.dumps({'result-assistance':True})
      return json_response
 
@@ -97,8 +103,7 @@ def issueVoice(voice):
      }
     r = requests.post(url = API_ENDPOINT,data=json.dumps(data),headers=headers)
     json_str = json.dumps(r.json())
-    #print(json_str)
-    return json_str
+    print(voice)
 
 # query GPIO
 def queryGPIO(url,light):

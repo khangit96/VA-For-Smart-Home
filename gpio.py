@@ -50,13 +50,18 @@ def issueVoice():
      data = voice.encode(encoding='utf-8')
      r = requests.post(url = API_ENDPOINT,data=data,headers=headers)
 
-     url =r.json()['async']
-     print(url)
-     urllib.request.urlretrieve(url,'voice.mp3')
-     os.system("mpg123 voice.mp3")
+     try:
+        url=r.json()['async']
+        print(url)
+        urllib.request.urlretrieve(url,'voice.mp3')
+        os.system("mpg123 voice.mp3")
+        json_response= json.dumps({'result-voice':True})
+        return json_response
 
-     json_response= json.dumps({'result-voice':True})
-     return json_response
+     except:
+        json_response= json.dumps({'result-voice':False})
+        return json_response
+        
 
 #Get temperature
 @app.route('/get-temperature',methods=['GET'])
