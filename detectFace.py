@@ -2,6 +2,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 import cv2
+from mail import sendEmail
  
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -24,6 +25,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
     for (x,y,w,h) in faces:
         img = cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+        cv2.imwrite('face_detected.jpg',img)
+        sendEmail('face_detected.jpg')
         roi_gray = gray[y:y+h, x:x+w]
         roi_color = img[y:y+h, x:x+w]
         print('detect face')

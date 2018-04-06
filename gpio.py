@@ -47,10 +47,10 @@ def turnOnLight():
 def turnOffLight():
      respone= requestFlask.json
      light=respone['light']
-     if light=="2":
-         GPIO.output(20,GPIO.LOW)
+     if light=="1":
+         GPIO.output(20,GPIO.HIGH)
      else:
-         GPIO.output(21,GPIO.LOW)
+         GPIO.output(21,GPIO.HIGH)
      print('turn off light '+light)
      json_response= json.dumps({'result-turn-off-light':True})
      return json_response
