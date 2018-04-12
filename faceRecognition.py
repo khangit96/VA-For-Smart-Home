@@ -16,6 +16,8 @@ OUTPUT_SIZE_WIDTH = 775
 OUTPUT_SIZE_HEIGHT = 600
 
 # issueVoice
+
+
 def issueVoice(arg, arg2):
     data = {
         'voice': arg
@@ -28,7 +30,9 @@ def issueVoice(arg, arg2):
     json_str = json.dumps(r.json())
     print(json_str)
 
-#query assistance    
+# query assistance
+
+
 def queryAssistance(arg, arg2):
     data = {
         'text': arg
@@ -38,25 +42,31 @@ def queryAssistance(arg, arg2):
         'content-type': 'application/json; charset=utf-8'
     }
     r = requests.post(url=API_ENDPOINT, data=json.dumps(data), headers=headers)
-    
+
     if r is None:
         print('error respones')
-    else:    
+    else:
         json_str = json.dumps(r.json())
         print(json_str)
 
-#start thread query assistance   
+# start thread query assistance
+
+
 def startThreadQueryAssistance(value):
-    thread = threading.Thread(target=queryAssistance, args=(value,'fkf'))
+    thread = threading.Thread(target=queryAssistance, args=(value, 'fkf'))
     thread.start()
 
-#start thread issuse voice
+# start thread issuse voice
+
+
 def startThreadIssuseVoice(value):
-    thread = threading.Thread(target=issueVoice, args=(value,'fkf'))
+    thread = threading.Thread(target=issueVoice, args=(value, 'fkf'))
     thread.start()
 
 # predict face
-def predictFace(gray,faces):
+
+
+def predictFace(gray, faces):
    for (x, y, w, h) in faces:
         Id, con = recognizer.predict(gray[y:y+h, x:x+w])
 
@@ -78,11 +88,16 @@ def predictFace(gray,faces):
         else:
             Id = "người lạ"
 
-        #start thread query assistance
-        #startThreadQueryAssistance('xin chào, bạn tên gì')
-        if countPredict==5:
-          print(Id+'-'+str(con))
-
+        if countPredict == 5:
+            #startThreadQueryAssistance('hi')
+              if Id == "người lạ":
+                 startThreadIssuseVoice('xin chào, bạn tên gì')
+                #startThreadQueryAssistance('xin chào, bạn tên gì')
+              else:
+                 startThreadIssuseVoice('xin chào ' + Id+'. ' + Id+'cần hỗ trợ gì')
+              #startThreadQueryAssistance('xin chào ' + Id+". " + Id+" cần hỗ trợ gì")
+              print(Id+'-'+str(con))
+ 
 countPredict=0
 
 # detect and tracking face
@@ -91,7 +106,6 @@ def detectAndTrackLargestFace():
 
     cv2.namedWindow("base-image", cv2.WINDOW_AUTOSIZE)
     cv2.namedWindow("result-image", cv2.WINDOW_AUTOSIZE)
-
     cv2.moveWindow("base-image", 0, 100)
     cv2.moveWindow("result-image", 400, 100)
 
