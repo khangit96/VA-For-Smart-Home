@@ -79,7 +79,7 @@ def predictFace(gray,faces):
             Id = "người lạ"
 
         #start thread query assistance
-       # startThreadQueryAssistance('hi')
+        startThreadQueryAssistance('xin chào, bạn tên gì')
         if countPredict==5:
           print(Id+'-'+str(con))
 
@@ -210,7 +210,7 @@ def detectAndTrackLargestFace():
                     # again
                     trackingFace = 0
                     print('stop tracking')
-                    #startThreadIssuseVoice('mình không thấy mặt bạn, vui lòng quay lại đi')
+                    startThreadIssuseVoice('mình không thấy mặt bạn, vui lòng quay lại đi')
                     
 
             # Since we want to show something larger on the screen than the
