@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK && data != null) {
                 ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 final String textRespone = result.get(0).toString();
-                String url = "http://192.168.1.12:3000/query";
+                String url = "http://192.168.43.141:3000/query";
 
                 JSONObject postparams = new JSONObject();
                 try {
