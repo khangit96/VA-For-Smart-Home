@@ -5,7 +5,7 @@ capture = cv2.VideoCapture(0)
 detector=cv2.CascadeClassifier('haarcascade_frontface.xml')
 sampleNum=0
 #Id=raw_input('enter your id')
-Id=2
+Id=1
 while(True):
     ret, img = capture.read()
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

@@ -30,4 +30,4 @@ def getImagesAndLabels(path):
 
 faces,Ids = getImagesAndLabels('DataSet')
 recognizer.train(faces, np.array(Ids))
-recognizer.write('trainner.yml')
+recognizer.write('../Model/trainner.yml')
