@@ -136,7 +136,7 @@ def detectAndTrackLargestFace():
                     
 
             # Since we want to show something larger on the screen than the
-            # original 320x240, we resize the image again
+            # original 320x240, we resưize the image again
             #
             # Note that it would also be possible to keep the large version
             # of the baseimage and make the result image a copy of this large
