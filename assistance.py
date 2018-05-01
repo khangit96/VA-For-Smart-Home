@@ -5,14 +5,39 @@ from flask import Flask
 from flask import request as requestFlask
 import time
 import config as con
+import pyrebase
 
 app = Flask(__name__)
 
-# home
+# firebase
+config = {
+  "apiKey": "uTP6tlP930oA1s9zuwGIZvrz1ef8ZjVLegROgNN0",
+  "authDomain": "smarthome-5d11a.firebaseapp.com",
+  "databaseURL": "https://smarthome-5d11a.firebaseio.com",
+  "storageBucket": "smarthome-5d11a.appspot.com"
+}
 
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
+
+def stream_handler(message):
+     requestApiAI = ai.text_request()
+     requestApiAI.lang = 'en'
+     requestApiAI.query = message['data']
+     requestApiAI.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
+
+     response = requestApiAI.getresponse()
+     json_res =json.loads(response.read().decode())
+
+     result = json_res['result']
+     action= result['action']
+     textRespone= result['fulfillment']['speech']
+     db.child("VA").update({"respone":textRespone})
+     print(textRespone)
 
 @app.route('/', methods=['GET'])
 def index():
+     my_stream = db.child("VA/message").stream(stream_handler)
      json_response = json.dumps({'result-assistance': True})
      return json_response
 
@@ -36,7 +61,7 @@ def query():
      result = json_res['result']
      action= result['action']
      textRespone= result['fulfillment']['speech']
-
+  
       # weather
      if action =='start-weather.start-weather-custom' or action== 'start-weather-true':
         try:
