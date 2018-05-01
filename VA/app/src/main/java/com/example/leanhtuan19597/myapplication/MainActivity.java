@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        pg = new ProgressDialog(MainActivity.this);
+        //   pg = new ProgressDialog(MainActivity.this);
         fab = findViewById(R.id.fab);
     }
 
@@ -127,31 +127,31 @@ public class MainActivity extends AppCompatActivity {
 
     /**/
     public void initEvents() {
-        processing(switchRelay1, cbRelay1, "Relay1");
-        processing(switchRelay2, cbRelay2, "Relay2");
-        processing(switchRelay3, cbRelay3, "Relay3");
-        processing(switchRelay4, cbRelay4, "Relay4");
-        processing(switchRelay5, cbRelay5, "Relay5");
-        processing(switchRelay6, cbRelay6, "Relay6");
+        processing(switchRelay1, cbRelay1, "1");
+        processing(switchRelay2, cbRelay2, "2");
+//        processing(switchRelay3, cbRelay3, "Relay3");
+//        processing(switchRelay4, cbRelay4, "Relay4");
+//        processing(switchRelay5, cbRelay5, "Relay5");
+//        processing(switchRelay6, cbRelay6, "Relay6");
+//
+//        pg.setMessage("Đang khởi động hệ thống...");
+//        pg.setCancelable(false);
+//        pg.show();
 
-        pg.setMessage("Đang khởi động hệ thống...");
-        pg.setCancelable(false);
-        pg.show();
-
-        mDatabase.child("MinhTrung").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dt : dataSnapshot.getChildren()) {
-                    restoreData(dt);
-                }
-                pg.dismiss();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        mDatabase.child("MinhTrung").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot dt : dataSnapshot.getChildren()) {
+//                    restoreData(dt);
+//                }
+//                pg.dismiss();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,13 +245,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    cbRelay.setEnabled(true);
-                    mDatabase.child("MinhTrung/" + relay + "/TurnOn").setValue(true);
-                    // Toast.makeText(getApplicationContext(), "Bat den 1", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Turn on" + relay, Toast.LENGTH_LONG).show();
+                    queryGPIO("turn-on-light", relay);
                 } else {
-                    mDatabase.child("MinhTrung/" + relay + "/TurnOn").setValue(false);
-                    cbRelay.setEnabled(false);
-                    Toast.makeText(getApplicationContext(), "Tat den 1", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Turn off" + relay, Toast.LENGTH_LONG).show();
+                    queryGPIO("turn-off-light", relay);
                 }
             }
         });
@@ -259,17 +257,46 @@ public class MainActivity extends AppCompatActivity {
         cbRelay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    switchRelay.setEnabled(false);
-                    mDatabase.child("MinhTrung/" + relay + "/Blink").setValue(true);
-                    Toast.makeText(getApplicationContext(), "Bat nhap nhay", Toast.LENGTH_LONG).show();
-                } else {
-                    switchRelay.setEnabled(true);
-                    mDatabase.child("MinhTrung/" + relay + "/Blink").setValue(false);
-                    Toast.makeText(getApplicationContext(), "Tat nhap nhay", Toast.LENGTH_LONG).show();
-                }
+
             }
         });
+    }
+
+    /*
+  *
+  * */
+    public void queryGPIO(String query, String numberLight) {
+        String url = "http://192.168.43.141:5000/" + query;
+        JSONObject postparams = new JSONObject();
+        try {
+            postparams.put("light", numberLight);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, url, postparams,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+        };
+
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+
+
     }
 
     @Override
@@ -283,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         if (requestCode == 10) {
