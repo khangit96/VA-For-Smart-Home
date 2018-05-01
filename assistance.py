@@ -20,20 +20,10 @@ config = {
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
+#Handler
 def stream_handler(message):
-     requestApiAI = ai.text_request()
-     requestApiAI.lang = 'en'
-     requestApiAI.query = message['data']
-     requestApiAI.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
-
-     response = requestApiAI.getresponse()
-     json_res =json.loads(response.read().decode())
-
-     result = json_res['result']
-     action= result['action']
-     textRespone= result['fulfillment']['speech']
-     db.child("VA").update({"respone":textRespone})
-     print(textRespone)
+     print(message['data'])
+     queryAssitant(message['data'])
 
 @app.route('/', methods=['GET'])
 def index():
@@ -44,6 +34,18 @@ def index():
 # #API AI
 CLIENT_ACCESS_TOKEN = '873c83cbf665414a885eebbf5d5bd448'
 ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
+
+# Query Assistant
+def queryAssitant(text):
+    data={
+         'text':text
+     }
+    API_ENDPOINT = 'http://localhost:'+str(con.ASSISTANCE_PORT)+'/query'
+    headers={
+      'content-type': 'application/json; charset=utf-8'
+     }
+    r = requests.post(url = API_ENDPOINT,data=json.dumps(data),headers=headers)
+    json_str = json.dumps(r.json())
 
 # get resquest
 @app.route('/query',methods=['POST'])
@@ -70,6 +72,7 @@ def query():
             entities=''
 
         issueVoice('Ok chờ mình tí, để mình tra cứu thông tin thời tiết '+ entities)
+        db.child("VA").update({"respone":'Ok chờ mình tí, để mình tra cứu thông tin thời tiết '+ entities})
 
     # temperature
      elif action== 'start-temperature-true':
@@ -77,11 +80,15 @@ def query():
             entities=result['parameters']['temperature']
             if entities!='':
                 issueVoice('Chờ mình tí, để mình lấy thông tin nhiệt độ '+ entities)
+                db.child("VA").update({"respone":'Chờ mình tí, để mình lấy thông tin nhiệt độ '+ entities})
+
          except:
             entities=''
             
      elif action== 'start-temperature-true.start-temperature-true-custom':
           issueVoice('Chờ mình tí, để mình lấy thông tin nhiệt độ hiện tại trong phòng')
+          db.child("VA").update({"respone":'Chờ mình tí, để mình lấy thông tin nhiệt độ hiện tại trong phòng'})
+
 
     # control light
      elif action=='control-light-true':
@@ -91,9 +98,13 @@ def query():
             if statusLight== 'bật':
                  queryGPIO('turn-on-light',numberLight)
                  issueVoice('mình đã bật đèn '+numberLight+' rồi đó')
+                 db.child("VA").update({"respone":'mình đã bật đèn '+numberLight+' rồi đó'})
+
             elif statusLight== 'tắt':
                 queryGPIO('turn-off-light',numberLight)
                 issueVoice('mình đã tắt đèn '+numberLight+' rồi đó')
+                db.child("VA").update({"respone":'mình đã tắt đèn '+numberLight+' rồi đó'})
+                
           except:
             numberLight=-3
             statusLight= ''
@@ -107,13 +118,17 @@ def query():
               if context['status-light']== 'bật':
                   queryGPIO('turn-on-light',context['number-light'])
                   issueVoice('mình đã bật đèn '+context['number-light']+' rồi đó')
+                  db.child("VA").update({"respone":'mình đã bật đèn '+context['number-light']+' rồi đó'})
+
               elif context['status-light']== 'tắt':
                   queryGPIO('turn-off-light',context['number-light'])
                   issueVoice('mình đã tắt đèn '+context['number-light']+' rồi đó')
+                  db.child("VA").update({"respone":'mình đã tắt đèn '+context['number-light']+' rồi đó'})
           except:
               context= ''
 
      issueVoice(textRespone)
+     db.child("VA").update({"respone":textRespone})
      json_response= json.dumps({'result-assistance':True})
      return json_response
 
