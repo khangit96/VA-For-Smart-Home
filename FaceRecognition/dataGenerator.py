@@ -5,7 +5,7 @@ capture = cv2.VideoCapture(0)
 detector=cv2.CascadeClassifier('haarcascade_frontface.xml')
 sampleNum=0
 #Id=raw_input('enter your id')
-Id=1
+Id=6
 while(True):
     ret, img = capture.read()
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -23,5 +23,5 @@ while(True):
     if cv2.waitKey(100) & 0xFF == ord('q'):
         break
     # break if the sample number is morethan 20
-    elif sampleNum>20:
+    elif sampleNum>40:
         break

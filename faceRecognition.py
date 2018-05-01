@@ -76,26 +76,23 @@ def predictFace(gray, faces):
             elif Id == 2:
                 Id = "Khang"
             elif Id == 3:
-                Id = 'Truong Giang'
+                Id = 'Khang'
             elif Id == 4:
-                Id = 'Me'
+                Id = 'Khang'
             elif Id == 5:
-                Id = 'Ba'
+                Id = 'Khang'
             elif Id == 6:
-                Id = 'Loi'
+                Id = 'Khang'
             elif Id == 7:
                 Id = 'Tuan'
         else:
             Id = "người lạ"
 
-        if countPredict == 5:
-            #startThreadQueryAssistance('hi')
+        if countPredict == 7:
               if Id == "người lạ":
                  startThreadIssuseVoice('xin chào, bạn tên gì')
-                #startThreadQueryAssistance('xin chào, bạn tên gì')
               else:
                  startThreadIssuseVoice('xin chào ' + Id+'. ' + Id+'cần hỗ trợ gì')
-              #startThreadQueryAssistance('xin chào ' + Id+". " + Id+" cần hỗ trợ gì")
               print(Id+'-'+str(con))
  
 countPredict=0
@@ -181,7 +178,7 @@ def detectAndTrackLargestFace():
 
                 # If one or more faces are found, initialize the tracker
                 # on the largest face in the picture
-                if countPredict==5:
+                if countPredict==7:
                     global countPredict
                     countPredict=0
                     if maxArea > 0:
